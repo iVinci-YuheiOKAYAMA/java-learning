@@ -3,86 +3,56 @@ package todo;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
 
-import bean.Member;
-
-@WebServlet("/")
-public class TodoList extends HttpServlet {
-
+@WebServlet("/delete")
+public class delete extends HttpServlet {
 	static final boolean useConnectionPool = false;
-
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// 常にPOSTへ渡します。
-		doPost(request, response);
+	
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		String id = request.getParameter("id");
+		deleteData(id);
+		response.sendRedirect("/");
 	}
 
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-			request.setCharacterEncoding("UTF8");
-
-			// 呼び出し先Jspに渡すデータセット
-			request.setAttribute("list", getDbData());
-
-			// result.jsp にページ遷移
-			RequestDispatcher dispatch = request.getRequestDispatcher("WebContent/JSP/list.jsp");
-			dispatch.forward(request, response);
-	}
-
-	private List<Member> getDbData() {
-//		StringBuilder sb = new StringBuilder();
-//		ArrayList<ArrayList<String>> todolist = new ArrayList<ArrayList<String>>();
-		List<Member> list = new ArrayList<Member>();
+	private String deleteData(String id) {
+		StringBuilder sb = new StringBuilder();
 		Connection con = null;
 		Statement stmt = null;
-		ResultSet rs = null;
+//		Integer rs = null;
 
 		try {
 			con = getConnection();
 			stmt = con.createStatement();
-			rs = stmt.executeQuery("select id, task from todo where delflg = 0 order by createtime desc");
-
-			while (rs.next()) {
-//				sb.append("<tr><td>");
-//				sb.append(rs.getString("task"));
-//				sb.append("</td><td><form action='/delete' method='post'><input type='hidden' name='id' value=" + rs.getString("id") + "><button id='button' class='btn btn-danger'>削除</button></form></td></tr>");
-				String id = rs.getString("id");
-				String task = rs.getString("task");
-//				String id = rs.getString("id");
-//				String task = rs.getString("task");
-				list.add(new Member(id,task));
-			}
+			int rowscount = stmt.executeUpdate("UPDATE  todo set delflg=1 where id=" + id);
 		} catch (SQLException e) {
 			e.printStackTrace();
-//			return "エラー発生(SQLException)";
+			return "エラー発生(SQLException)";
 		} catch (NamingException e) {
 			e.printStackTrace();
-//			return "エラー発生(NamingException)";
+			return "エラー発生(NamingException)";
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
-//			return "エラー発生(ClassNotFoundException)";
+			return "エラー発生(ClassNotFoundException)";
 		} finally {
-			try { if (rs   != null) rs.close();   } catch (Exception e) { e.printStackTrace(); }
+//			try { if (rs   != null) rs.close();   } catch (Exception e) { e.printStackTrace(); }
 			try { if (stmt != null) stmt.close(); } catch (Exception e) { e.printStackTrace(); }
 			try { if (con  != null) con.close();  } catch (Exception e) { e.printStackTrace(); }
 		}
-		return list;
+		return sb.toString();
 	}
 
+	
 	/**
 	 * DBとの接続を取得します。
 	 * @return DBとのConnection
