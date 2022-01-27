@@ -5,18 +5,35 @@
 <html>
 <head>
 	<meta charset="UTF-8">
-	<link rel='stylesheet' type='text/CSS' href='style.css'>
+	<link rel='stylesheet' type='text/CSS' href='WebContent/CSS/style.css'>
 	<link href='https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css' rel='stylesheet' integrity='sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC' crossorigin='anonymous'>
 	<title>TODO入力画面</title>
 </head>
-<body>	
-	<p>TODO入力画面</p>
-	<form action='/create' method='post' onSubmit="return check()">
-		<label>新規TODO</label>
-		<textarea type="text" id="new_todo" name="new_todo" placeholder='新しいTODOを入力してください。'></textarea>
-	<button type="button" href="/" class="btn btn-danger" onclick="location.href='/'">キャンセル</button>
-	<button id='btn' class="btn btn-success">登録</button>
-	</form>
+<body>
+	<%
+        if(request.getAttribute("error_msg")!=null){%>
+                <%=request.getAttribute("error_msg") %>
+        <%}
+	%>
+	<div class="container-xxl">
+		<p class="title">TODO入力画面</p>
+		<form action='/create' method='post' onSubmit="return check()">
+			<div class="row">
+				<label class="col">新規TODO</label>
+			</div>
+			<div class="row">
+				<div class="col-10">
+					<textarea type="text" id="new_todo" name="new_todo" placeholder='新しいTODOを入力してください。'></textarea>
+				</div>		
+			</div>
+			<div class="row">
+				<div class="col-10 btn-wrapper2">			
+					<button type="button" href="/todo" class="btn btn-outline-danger" onclick="location.href='/todo'">キャンセル</button>
+					<button id='btn' class="btn btn-outline-success">登録</button>
+				</div>
+			</div>
+		</form>
+	</div>
 	<script>
 		function check(){
 
@@ -24,12 +41,9 @@
 				return true;
 			}
 			else{
-				window.alert('キャンセルされました');
 				return false;
 			}
 		}
 	</script>
 </body>
 </html>
-
-			

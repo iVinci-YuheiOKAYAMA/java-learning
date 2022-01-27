@@ -3,12 +3,15 @@ package todo;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -20,14 +23,27 @@ public class create extends HttpServlet {
 	
 	static final boolean useConnectionPool = false;
 	
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		request.setCharacterEncoding("UTF-8");
 		String new_todo = request.getParameter("new_todo");
-		insertData(new_todo);
-		response.sendRedirect("/");
+		
+		boolean is_validated = validate.is_validated(new_todo);
+		if (is_validated) {
+			boolean insert_data =insertData(new_todo);
+			if (insert_data) {				
+				response.sendRedirect("/todo");
+			} else {
+				RequestDispatcher dispatch = request.getRequestDispatcher("WebContent/JSP/error.jsp");
+				dispatch.forward(request, response);
+			}
+		} else {
+			request.setAttribute("error_msg", "※0～60文字で入力してください。");
+			RequestDispatcher dispatch = request.getRequestDispatcher("WebContent/JSP/add.jsp");
+			dispatch.forward(request, response);
+		}
 	}
 
-	private String insertData(String new_todo) {
+	private boolean insertData(String new_todo) {
 		StringBuilder sb = new StringBuilder();
 		Connection con = null;
 		Statement stmt = null;
@@ -35,23 +51,25 @@ public class create extends HttpServlet {
 
 		try {
 			con = getConnection();
-			stmt = con.createStatement();
-			int rowscount = stmt.executeUpdate("INSERT INTO todo (task, delflg, createtime) VALUES ('" + new_todo + "', 0, current_timestamp)");
+			String sql = "INSERT INTO todo (task, delflg, createtime) VALUES (?, 0, current_timestamp)";
+			PreparedStatement pstmt = con.prepareStatement(sql);
+			pstmt.setString(1, new_todo);
+			int rowscount = pstmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
-			return "エラー発生(SQLException)";
+			return false;
 		} catch (NamingException e) {
 			e.printStackTrace();
-			return "エラー発生(NamingException)";
+			return false;
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
-			return "エラー発生(ClassNotFoundException)";
+			return false;
 		} finally {
 //			try { if (rs   != null) rs.close();   } catch (Exception e) { e.printStackTrace(); }
 			try { if (stmt != null) stmt.close(); } catch (Exception e) { e.printStackTrace(); }
 			try { if (con  != null) con.close();  } catch (Exception e) { e.printStackTrace(); }
 		}
-		return sb.toString();
+		return true;
 	}
 
 	

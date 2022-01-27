@@ -22,7 +22,7 @@ public class delete extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		String id = request.getParameter("id");
 		deleteData(id);
-		response.sendRedirect("/");
+		response.sendRedirect("/todo");
 	}
 
 	private String deleteData(String id) {

@@ -22,7 +22,7 @@ import javax.sql.DataSource;
 
 import bean.Member;
 
-@WebServlet("/")
+@WebServlet("/todo")
 public class TodoList extends HttpServlet {
 
 	static final boolean useConnectionPool = false;
@@ -39,13 +39,11 @@ public class TodoList extends HttpServlet {
 			request.setAttribute("list", getDbData());
 
 			// result.jsp にページ遷移
-			RequestDispatcher dispatch = request.getRequestDispatcher("WebContent/JSP/list.jsp");
+			RequestDispatcher dispatch = request.getRequestDispatcher("/WebContent/JSP/list.jsp");
 			dispatch.forward(request, response);
 	}
 
-	private List<Member> getDbData() {
-//		StringBuilder sb = new StringBuilder();
-//		ArrayList<ArrayList<String>> todolist = new ArrayList<ArrayList<String>>();
+	private List<Member> getDbData() {		
 		List<Member> list = new ArrayList<Member>();
 		Connection con = null;
 		Statement stmt = null;
@@ -57,13 +55,8 @@ public class TodoList extends HttpServlet {
 			rs = stmt.executeQuery("select id, task from todo where delflg = 0 order by createtime desc");
 
 			while (rs.next()) {
-//				sb.append("<tr><td>");
-//				sb.append(rs.getString("task"));
-//				sb.append("</td><td><form action='/delete' method='post'><input type='hidden' name='id' value=" + rs.getString("id") + "><button id='button' class='btn btn-danger'>削除</button></form></td></tr>");
 				String id = rs.getString("id");
 				String task = rs.getString("task");
-//				String id = rs.getString("id");
-//				String task = rs.getString("task");
 				list.add(new Member(id,task));
 			}
 		} catch (SQLException e) {
