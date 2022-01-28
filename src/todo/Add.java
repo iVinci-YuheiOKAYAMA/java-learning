@@ -13,11 +13,20 @@ import javax.servlet.http.HttpServletResponse;
 public class Add extends HttpServlet {
 	static final boolean useConnectionPool = false;
 
+	/**
+	 * "/add"へのGETリクエストをdoPost()へ渡します
+	 * @param request リクエスト
+	 * @param response レスポンス
+	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// 常にPOSTへ渡します。
 		doPost(request, response);
 	}
 
+	/**
+	 * add.jspを呼び出しTODO入力画面を表示します
+	 * @param request リクエスト
+	 * @param response レスポンス
+	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("UTF8");
 

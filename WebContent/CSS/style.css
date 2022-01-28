@@ -37,3 +37,7 @@
 #new_todo:focus {
 	outline:  none;
 }
+
+.error-msg {
+	color: red;
+}

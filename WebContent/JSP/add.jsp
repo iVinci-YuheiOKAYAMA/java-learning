@@ -10,20 +10,20 @@
 	<title>TODO入力画面</title>
 </head>
 <body>
-	<%
-        if(request.getAttribute("error_msg")!=null){%>
-                <%=request.getAttribute("error_msg") %>
-        <%}
-	%>
 	<div class="container-xxl">
 		<p class="title">TODO入力画面</p>
+	<%
+        if(request.getAttribute("error_msg")!=null){%>
+                <p class="error-msg"><%=request.getAttribute("error_msg") %></p>
+        <%}
+	%>
 		<form action='/create' method='post' onSubmit="return check()">
 			<div class="row">
 				<label class="col">新規TODO</label>
 			</div>
 			<div class="row">
 				<div class="col-10">
-					<textarea type="text" id="new_todo" name="new_todo" placeholder='新しいTODOを入力してください。'></textarea>
+					<textarea type="text" id="new_todo" name="new_todo" placeholder='新しいTODOを入力してください。'><% if(request.getAttribute("value")!=null){ %><%=request.getAttribute("value")%><% } %></textarea>
 				</div>		
 			</div>
 			<div class="row">

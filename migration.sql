@@ -16,3 +16,5 @@ INSERT INTO todo (task, delflg, createtime) VALUES ('ƒSƒƒSƒ‚·‚é', 1, '2022-01-
 ;
 INSERT INTO todo (task, delflg, createtime) VALUES ('•‚ğ–‚­', 0, '2022-01-23 14:08:23')
 ;
+
+delete from todo *;
