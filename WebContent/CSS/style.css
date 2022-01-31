@@ -1,0 +1,43 @@
+.title {
+	font-size: 36px;
+	color: gray;
+}
+
+.big-td {
+	width: 90%;
+}
+
+.small-td {
+	width: 10%;
+}
+
+.btn-wrapper {
+	text-align: center;
+}
+
+.btn-wrapper2 {
+	text-align: right;
+}
+.add-btn-wrapper {
+	text-align: right;
+}
+
+.todo-table {
+	margin-bottom: 0;
+}
+
+.last-tr {
+	border-color: white;
+}
+
+#new_todo {
+	width: 100%;
+}
+
+#new_todo:focus {
+	outline:  none;
+}
+
+.error-msg {
+	color: red;
+}
